@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    /* promise 解决callback的层层回调 */
+    let checkLogin = function() {
+      return new Promise(function(resolve, reject) {
+        let flag = document.cookie.indexOf("userId") > -1 ? true : false
+
+        if(flag = true) {
+          // 成功后返回'resolve'
+          resolve({
+            status: 0,
+            result: true
+          })
+        } else {
+          reject("error")
+        }
+      })
+    }
+
+    let getUserInfo = () => {
+      return new Promise((reso, reje) => {
+        let userInfo = {
+          userId: '111'
+        }
+        reso(userInfo)
+      })
+    }
+
+    // 通过返回一个promise进行调用; 链式调用
+    checkLogin().then((res) => {
+      if(res.status === 0) {
+        console.log("login success")
+        return getUserInfo()
+      }
+    }).catch(error => {
+      console.log(`errors: ${error}`)
+    }).then((res2) => {
+      console.log(`userInfo: ${res2} - ${res2.userId}`)
+    })
+
+    // 参数必须是一个promise对象
+    Promise.all([checkLogin(), getUserInfo()]).then(([res1, res2]) => {
+      console.log(`result1: ${res1.result}, result2: ${res2.userId}`)
+    })
+  </script>
+</body>
+</html>

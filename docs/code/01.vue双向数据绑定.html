@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <input type="text" id="userName">
+    <br/>
+    <span id="uName"></span>
+
+    <script>
+        // 全局，console中直接输入
+        var obj = {}
+        Object.defineProperty(obj, "userName", {
+            // value: 'Jack'
+            get: function() {
+                console.log('get init')
+            },
+            set: function(val) {
+                console.log('set init')
+                document.getElementById('uName').innerText = val
+                document.getElementById('userName').value = val
+                // console: obj.userName = "set name"
+            }
+        })
+        document.getElementById('userName').addEventListener("keyup", function() {
+            // document.getElementById('uName').innerText = event.target.value
+            obj.userName = event.target.value
+        })
+    </script>
+</body>
+</html>

@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <link href="https://cdn.bootcss.com/twitter-bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet">
+  <script src="../../node_modules/vue-resource/dist/vue-resource.js"></script>
+  <script src="../../node_modules/vue/dist/vue.js"></script>
+</head>
+<body>
+  <div class="container" id="app">
+    <h1>vue-resource插件使用实例</h1>
+    <a class="btn btn-primary" href="javascript:;" v-on:click="get">Get请求</a>
+    <a class="btn btn-primary" href="javascript:;" @click="post">Post请求</a>
+    <a class="btn btn-primary" href="javascript:;" @click="jsonp">JSONP请求</a>
+    <a class="btn btn-primary" href="javascript:;" @click="http">HTTP</a>
+
+    <div class="container">
+      <span>{{msg}}</span>
+    </div>
+  </div>
+
+  <script>
+    // 之前版本直接挂载到vue实例中，不需要
+    Vue.use(VueResource)
+
+    var app = new Vue({
+      el: '#app',
+      data: {
+        msg: ''
+      },
+      http: {
+        root: "http://127.0.0.1:5500/"
+      },
+      methods: {
+        // es5写法，推荐es6: get() {}
+        get: function() {
+          Vue.http.get("../../package.json", {
+            // 参数位于params中
+            params: {
+              userId: "101"
+            },
+            headers: {
+              token: 'aaa'
+            }
+          }).then(res => {  // 成功的回调
+            // res.data 才是结果
+            console.log(res)
+            this.msg = res.data
+          }, error => {     // 失败的回调
+            this.msg = error
+          })
+        },
+        post() {
+          this.$http.post("../../package.json", {
+            userId: '102'
+          }, {
+            headers: {
+              access_token: 'abc'
+            }
+          }).then(function(res) {
+            this.msg = res.data
+          })
+        },
+        // 跨域请求
+        jsonp() {
+          this.$http.jsonp("http://127.0.0.1:5500/package.json").then(res => {
+            this.mgs = res.data
+          })
+        },
+        http() {
+          this.$http({
+            url: "README.md",
+            params: {
+              userId: '103'
+            },
+            headers: {
+              token: 'fadi'
+            },
+            timeout: 50,
+            before: function() {
+              console.log("before inti")
+            }
+          }).then(function(res) {
+            this.msg = res.data
+          })
+        }
+      },
+      mounted: function() {
+        Vue.http.interceptors.push(function(request, next) {
+          console.log("request init")
+          next(function(response) {
+            console.log("response init")
+            return response
+          })
+        })
+      }
+    })
+  </script>
+</body>
+</html>
