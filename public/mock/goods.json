@@ -1,0 +1,54 @@
+{
+  "status": "0",
+  "msg": "",
+  "result": [
+    {
+      "productId": "11110",
+      "productName": "小米10",
+      "productPrice": 2999,
+      "productImg": "1.jpg"
+    },
+    {
+      "productId": "11111",
+      "productName": "小米音响",
+      "productPrice": 299,
+      "productImg": "2.jpg"
+    },
+    {
+      "productId": "11112",
+      "productName": "电视",
+      "productPrice": 2699,
+      "productImg": "3.jpg"
+    },
+    {
+      "productId": "11113",
+      "productName": "笔记本电脑",
+      "productPrice": 5999,
+      "productImg": "4.jpg"
+    },
+    {
+      "productId": "11114",
+      "productName": "小米10",
+      "productPrice": 2999,
+      "productImg": "5.jpg"
+    },
+    {
+      "productId": "11115",
+      "productName": "小米音响",
+      "productPrice": 299,
+      "productImg": "6.jpg"
+    },
+    {
+      "productId": "11116",
+      "productName": "电视",
+      "productPrice": 2699,
+      "productImg": "7.jpg"
+    },
+    {
+      "productId": "11117",
+      "productName": "笔记本电脑",
+      "productPrice": 5999,
+      "productImg": "8.jpg"
+    }
+  ]
+}
