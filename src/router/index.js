@@ -6,9 +6,7 @@ Vue.use(VueRouter)
 
 const routes = [
   {
-    path: '/goods/:goodsId/user/:username',
-    // 路由中name和组件中name无联系
-    // name: 'somegoods',
+    path: '/',
     component: GoodsList
   }
 ]
@@ -16,6 +14,7 @@ const routes = [
 const router = new VueRouter({
   // 路由模式：history, hash
   mode: 'hash',
+
   routes
 })
 
