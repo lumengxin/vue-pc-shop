@@ -12,7 +12,7 @@
         <div class="filter-nav">
           <span class="sortby">Sort by:</span>
           <a href="javascript:void(0)" class="default cur">Default</a>
-          <a href="javascript:void(0)" class="price">
+          <a href="javascript:void(0)" class="price" @click="sortGoods">
             Price
             <svg class="icon icon-arrow-short">
               <use xlink:href="#icon-arrow-short" />
@@ -31,7 +31,7 @@
             <dl class="filter-price">
               <dt>Price:</dt>
               <dd>
-                <a href="javascript:void(0)" @click="priceChecked = 'All'"
+                <a href="javascript:void(0)" @click="setPriceAll"
                   :class="{'cur': priceChecked === 'All'}"
                   >
                   All
@@ -48,23 +48,32 @@
           </div>
           <!-- search result accessories list -->
           <div class="accessory-list-wrap">
-            <div class="accessory-list col-4">
+            <div class="accessory-list col-4 list-wrap">
               <ul>
                 <li v-for="goods in goodsList" :key="goods.productId">
                   <div class="pic">
                     <a href="#">
-                      <img v-lazy="require('../../../public/img/' + goods.productImg)" alt />
+                      <img v-lazy="require('../../../public/img/' + goods.productImage)" alt />
                     </a>
                   </div>
                   <div class="main">
                     <div class="name">{{goods.productName}}</div>
-                    <div class="price">{{goods.productPrice}}</div>
+                    <div class="price">{{goods.salePrice}}</div>
                     <div class="btn-area">
                       <a href="javascript:;" class="btn btn--m">加入购物车</a>
                     </div>
                   </div>
                 </li>
               </ul>
+              <!-- vue-infinite-scroll插件实现滚动加载 -->
+              <div class="load-more"
+                v-infinite-scroll="loadMore" infinite-scroll-disabled="busy"
+                infinite-scroll-distance="30"
+                >
+                <img src="../../../public/img/loading-svg/loading-spinning-bubbles.svg" alt="loading"
+                  v-if="loading"
+                  >
+              </div>
             </div>
           </div>
         </div>
@@ -96,7 +105,8 @@ export default {
   data() {
     return {
       goodsList: [],
-      // imgSrc: '../../assets/logo.png'
+      /* imgSrc: '../../assets/logo.png' */
+      // 价格区间筛选
       priceFilter: [
         {
           startPrice: '0.00',
@@ -111,32 +121,97 @@ export default {
           endPrice: '2000.00'
         }
       ],
+      // 价格区间全选
       priceChecked: 'All',
+      // 小屏价格区间显隐
       filterBy: false,
-      overLayFlag: false
+      // 小屏价格区间蒙版显隐
+      overLayFlag: false,
+      // 价格排序
+      sortFlag: true,
+      // 当前页码
+      page: 1,
+      // 每页条目
+      pageSize: 8,
+      // 滚动加载是否生效
+      busy: true,
+      loading: false
     }
   },
   methods: {
-    getGoodsData() {
-      axios.get('/api/goods.json').then(res => {
-        console.log(res)
-        this.goodsList = res.data.result
+    // flag：请求数据是否累加
+    getGoodsData(flag) {
+      var param = {
+        page: this.page,
+        pageSize: this.pageSize,
+        sort: this.sortFlag ? 1 : -1,
+        priceLevel: this.priceChecked
+      }
+      this.loading = true
+      axios.get('/api/goods/list', {
+        params: param
+      }).then(response => {
+        this.loading = false
+        let res = response.data
+        // console.log("getGoodsData -> res", res)
+        if(res.status === '0') {
+          if(flag) {
+            this.goodsList = this.goodsList.concat(res.result.list)
+
+            if(res.result.count === 0) {
+              this.busy = true
+            } else {
+              this.busy = false
+            }
+          } else {
+            this.goodsList = res.result.list
+            this.busy = false
+          }
+        } else {
+          this.goodsList = []
+        }
       })
-      // axios.get('http://localhost:3000/goods/list').then(res => {
+      // axios.get('/api/goods.json').then(res => {
       //   this.goodsList = res.data.result
       // })
     },
+    // 切换选中价格区间样式
     setPriceFilter(index) {
       this.priceChecked = index
       this.closePop()
+
+      this.page = 1
+      this.getGoodsData()
     },
+    setPriceAll() {
+      this.priceChecked = 'All'
+      this.page = 1
+      this.getGoodsData()
+    },
+    // 小屏下点击显示价格筛选
     showFilterPop() {
       this.filterBy = true
       this.overLayFlag = true
     },
+    // 小屏下点击隐藏价格筛选
     closePop() {
       this.filterBy = false
       this.overLayFlag = false
+    },
+    // 价格排序
+    sortGoods() {
+      this.sortFlag = !this.sortFlag
+      this.page = 1
+      this.getGoodsData()
+    },
+    // 鼠标滚动触发
+    loadMore() {
+      this.busy = true
+      // 防止一次滚动触发太多次请求
+      setTimeout(() => {
+        this.page++
+        this.getGoodsData(true)
+      }, 500)
     }
   },
   mounted() {
@@ -726,4 +801,16 @@ export default {
   }
 }
 
+.load-more {
+  height: 100px;
+  line-height: 100px;
+  text-align: center;
+}
+/* .list-wrap ul::after{
+  clear: both;
+  content: "";
+  height: 0;
+  display: block;
+  visibility: hidden;
+} */
 </style>
