@@ -594,3 +594,55 @@ mongo
 
 
 
+#### 3.5 Node开发接口
+
+#### (1) 商品信息列表接口
+
+> localhost:3000/goods/list
+
+**app.js**
+
+```
+// 创建goods一级路由
+var goodsRouter = require('./routes/goods');
+
+app.use('/goods', goodsRouter);
+```
+
+**models/goods.js**
+
+```
+var mongoose = require('mongoose')
+var Schema = mongoose.Schema
+
+var produtSchema = new Schema({
+  "productId": {type:String},
+  "productName": String,
+  "salePrice": Number,
+  "checked": String,
+  "productNum": Number,
+  "productImage": String
+})
+
+module.exports = mongoose.model('Good', produtSchema)
+
+```
+
+**routers/goods.js**
+
+```
+var express = require('express');
+var router = express.Router();
+
+var mongoose = require('mongoose');
+var Goods = require('../models/goods');
+
+// 连接MongoDB数据库
+mongoose.connect('mongodb://127.0.0.1:27017/vue_pc_shop');
+...
+
+```
+
+**测试接口完成**
+
+> http://localhost:3000/goods/list?page=1[,&pageSize=10[,$sort=-1]]

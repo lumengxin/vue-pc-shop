@@ -122,6 +122,9 @@ export default {
         console.log(res)
         this.goodsList = res.data.result
       })
+      // axios.get('http://localhost:3000/goods/list').then(res => {
+      //   this.goodsList = res.data.result
+      // })
     },
     setPriceFilter(index) {
       this.priceChecked = index
