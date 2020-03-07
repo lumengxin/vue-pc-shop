@@ -60,7 +60,9 @@
                     <div class="name">{{goods.productName}}</div>
                     <div class="price">{{goods.salePrice}}</div>
                     <div class="btn-area">
-                      <a href="javascript:;" class="btn btn--m">加入购物车</a>
+                      <a href="javascript:;" class="btn btn--m" @click="addCart(goods.productId)">
+                        加入购物车
+                      </a>
                     </div>
                   </div>
                 </li>
@@ -212,6 +214,17 @@ export default {
         this.page++
         this.getGoodsData(true)
       }, 500)
+    },
+    addCart(productId) {
+      axios.post('api/goods/addCart', {
+        productId: productId
+      }).then((res) => {
+        if(res.data.status === '0') {
+          alert('加入成功')
+        } else {
+          alert('失败')
+        }
+      })
     }
   },
   mounted() {
