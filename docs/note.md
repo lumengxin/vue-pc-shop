@@ -389,3 +389,208 @@ export default {
 
 
 
+## 3.服务端
+
+### 3.1 Linux安装node.js
+
+- wget https://nodejs.org/dist/v12.16.1/node-v12.16.1-linux-x64.tar.xz
+- xz -d node-v12.16.1-linux-x64.tar.xz  / tar -xzvf node-v12.16.1-linux-x64.tar.gz
+- tar -xvf node-v12.16.1-linux-x64.tar
+- ln -s /node-v12.16.1-linux-x64/bin/node /user/local/bin/node
+- ln -s /node-v12.16.1-linux-x64/bin/npm /user/local/bin/npm
+
+
+
+### 3.2 Node基础编程
+
+- 基于Chrome V8引擎
+- 单线程
+- 使用js开发后端代码
+- 非阻塞IO
+
+#### (1) Common规范
+
+#### (2) 创建一个Http Server
+
+#### (3) 创建一个Web容器，可以访问到HTML内容
+
+
+
+### 3.3 MongoDB搭建
+
+- 高可扩展性
+- 分布式存储
+- 低成本
+- 结构灵活
+
+#### (1) windows平台
+
+- 下载安装包：[官网](https://fastdl.mongodb.org/win32/mongodb-win32-x86_64-2012plus-4.2.3-signed.msi)
+- 添加db存储和日志存储文件夹
+
+**c盘或者其他地方，创建文件夹用来存放数据**
+如：c/MongoDB/data、 logs/mongo.log、etc/mongo.conf
+
+**启动mongo**
+
+管理员身份打开命令行工具，进入至mongo安装bin子目录；
+
+> mogod --depath c:\MongoDB\data
+>
+> 默认端口：localhost:27017
+
+*mongo.conf:*
+
+```
+#数据库路径
+dbpath=c:\MongoDB\data\
+#日志输出文件路径
+logpath=c:\MongoDB\logs\mongo.log
+#错误日志采用追加模式
+logappend=true
+#启用日志文件，默认启动
+journal=true
+#过滤掉一些无用日志信息，若需要调试设置为flase
+quiet=false
+#端口号
+port=27017
+#指定存储引擎（默认不需要，启动不成功时加）
+storageEngine=mmapv1
+#http 配置
+httpinterface=true
+```
+
+**根据配置文件启动**
+
+([--httpinterface]: localhost:28017,网页中访问日志)
+
+> mongod --config c:\MongoDB\etc\mongo.conf [--httpinterface]
+
+
+- 添加服务，配置环境变量，启动Mongo
+
+**添加至服务**
+
+> mongod --config c:\MongoDB\etc\mongo.conf --install [--serviceName "MongoDB"]
+
+**配置环境变量**
+
+**客户端工具使用（MongoVUE）**
+
+> 创建一个数据库 Create new Connection
+>
+> name: Demo
+>
+> Server: 127.0.0.1 (上线后为服务器地址)
+>
+> Port: 27017
+
+*Demo中插入一个数据库(命令行)*
+
+```
+>mongo
+>show dbs	
+>use pcshop
+>db.goods.insert((id:101, "name":"mi10", "price": 3990))
+```
+
+#### (2) Linux平台
+
+- 下载安装包或压缩包
+- 上传服务器，解压缩
+
+**登录远程服务器**
+
+> ssh root@123.572.122
+>
+> xxxx(密码)
+
+**本地包上传到服务器**
+
+> scp /.../mongodb-org-server_4.2.3_amd64.tgz(本地文件目录)  root@123.572.122:/(服务器目录)
+>
+> xxxx
+
+**解压缩(远程shell)**
+
+> cd /
+>
+> tar -zxvf mongodb-org-server_4.2.3_amd64.tgz
+>
+> mkdir mongodb
+>
+> mv mongodb-org-server_4.2.3_amd64 mongodb
+>
+> cd mongodb
+>
+> mkdir data; ... etc, ...logs;
+>
+> /.../bin > mongod -f /mongodb/etc/mongo.conf
+
+**建立软链接**
+
+> ln -s /../bin/mongo /usr/local/bin/mongo
+>
+> mongo
+
+- 添加db储存和日志存储文件夹
+
+
+
+#### (3) MongoDB创建用户
+
+- 1.创建管理员
+- 2.授权认证
+- 3.给使用的数据库添加用户
+
+```
+// 非授权模式进入
+mongo
+>use admin
+>db.createUser({user: "admin", pwd: "admin", roles:["root"]})
+>db.auth("admin", "admin")  // 返回1，成功
+>use test
+>db.createUser({user: "root", pwd: "123456", roles:[{role:'dbOwner', db:'test'}]})
+>mongod -f /usr/local/etc/mongod.conf --auth // 以授权模式启动
+```
+
+
+
+#### (4) MongoDB基本语法
+
+**数据库对比**
+
+| SQL术语/概念 | MongoDB术语/概念 | 解释/说明                          |
+| ------------ | ---------------- | ---------------------------------- |
+| database     | database         | 数据库                             |
+| table        | collection       | 数据库表；集合                     |
+| row          | document         | 数据记录行；文档                   |
+| column       | field            | 数据字段；域                       |
+| index        | index            | 索引                               |
+| table joins  |                  | 表连接；不支持                     |
+| primary key  | primary key      | 主键，mongo自动将_id字段设置为主键 |
+
+1. 插入文档
+2. 更新文档
+3. 删除文档
+4. 查询文档
+
+
+
+### 3.4 Node.js启动调试方式
+
+- 通过node命令启动
+- 配置启动入口
+- pm2
+
+```
+..\vue-pc-shop
+>pm2 start server-express\bin\www
+>pm2 stop all
+>pm2 list
+>pm2 log
+...
+```
+
+
+

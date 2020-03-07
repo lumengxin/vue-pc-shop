@@ -49,6 +49,42 @@
       "productName": "笔记本电脑",
       "productPrice": 5999,
       "productImg": "8.jpg"
+    },
+    {
+      "productId": "11118",
+      "productName": "电视",
+      "productPrice": 2699,
+      "productImg": "9.jpg"
+    },
+    {
+      "productId": "1113",
+      "productName": "笔记本电脑",
+      "productPrice": 5999,
+      "productImg": "10.jpg"
+    },
+    {
+      "productId": "1114",
+      "productName": "小米10",
+      "productPrice": 2999,
+      "productImg": "11.jpg"
+    },
+    {
+      "productId": "1115",
+      "productName": "小米音响",
+      "productPrice": 299,
+      "productImg": "12.jpg"
+    },
+    {
+      "productId": "1116",
+      "productName": "电视",
+      "productPrice": 2699,
+      "productImg": "13.jpg"
+    },
+    {
+      "productId": "1117",
+      "productName": "笔记本电脑",
+      "productPrice": 5999,
+      "productImg": "14.jpg"
     }
   ]
 }

@@ -18,18 +18,31 @@
               <use xlink:href="#icon-arrow-short" />
             </svg>
           </a>
-          <a href="javascript:void(0)" class="filterby stopPop">Filter by</a>
+          <a href="javascript:void(0)" class="filterby stopPop"
+            @click="showFilterPop">
+            Filter by
+          </a>
         </div>
         <div class="accessory-result">
           <!-- filter -->
-          <div class="filter stopPop" id="filter">
+          <div class="filter stopPop" id="filter"
+            :class="{'filterby-show': filterBy}"
+            >
             <dl class="filter-price">
               <dt>Price:</dt>
               <dd>
-                <a href="javascript:void(0)">All</a>
+                <a href="javascript:void(0)" @click="priceChecked = 'All'"
+                  :class="{'cur': priceChecked === 'All'}"
+                  >
+                  All
+                </a>
               </dd>
-              <dd>
-                <a href="javascript:void(0)">0 - 100</a>
+              <dd v-for="(price, index) in priceFilter" :key="index" >
+                <a href="javascript:void(0)" @click="setPriceFilter(index)"
+                  :class="{'cur': priceChecked === index}"
+                  >
+                  {{price.startPrice}} - {{price.endPrice}}
+                </a>
               </dd>
             </dl>
           </div>
@@ -40,7 +53,7 @@
                 <li v-for="goods in goodsList" :key="goods.productId">
                   <div class="pic">
                     <a href="#">
-                      <img :src="require('../../../public/img/' + goods.productImg)" alt />
+                      <img v-lazy="require('../../../public/img/' + goods.productImg)" alt />
                     </a>
                   </div>
                   <div class="main">
@@ -57,6 +70,9 @@
         </div>
       </div>
     </div>
+
+    <!-- 小屏时，点击价格筛选时的遮罩层 -->
+    <div class="md-overlay" v-show="overLayFlag" @click.stop="closePop"></div>
 
     <nav-footer></nav-footer>
   </div>
@@ -81,6 +97,23 @@ export default {
     return {
       goodsList: [],
       // imgSrc: '../../assets/logo.png'
+      priceFilter: [
+        {
+          startPrice: '0.00',
+          endPrice: '500.00'
+        },
+        {
+          startPrice: '500.00',
+          endPrice: '1000.00'
+        },
+        {
+          startPrice: '1000.00',
+          endPrice: '2000.00'
+        }
+      ],
+      priceChecked: 'All',
+      filterBy: false,
+      overLayFlag: false
     }
   },
   methods: {
@@ -89,6 +122,18 @@ export default {
         console.log(res)
         this.goodsList = res.data.result
       })
+    },
+    setPriceFilter(index) {
+      this.priceChecked = index
+      this.closePop()
+    },
+    showFilterPop() {
+      this.filterBy = true
+      this.overLayFlag = true
+    },
+    closePop() {
+      this.filterBy = false
+      this.overLayFlag = false
     }
   },
   mounted() {
