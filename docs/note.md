@@ -577,7 +577,37 @@ mongo
 
 
 
-### 3.4 Node.js启动调试方式
+### 3.4 Express框架创建后端项目
+
+- 安装express generator生成器
+
+- 通过生成器自动创建项目
+- 配置分析
+
+```
+npm i -g express-generator;
+express server-express;
+前后端分离：(cd server-express; npm i; npm start/nodemon bin/www)
+
+合一起：server-express/package.json中开发依赖剪切到vue-pc-shop/package.json中，执行npm install。
+```
+
+**默认推荐jade模板语法，修改为html**
+
+```
+// 安装ejs
+npm i ejs --save;
+
+// 修改app.js
+var ejs = require('ejs');
+app.engine('.html', ejs.__express);
+app.set('view engine', 'html');
+```
+
+
+
+
+### 3.5 Node.js启动调试方式
 
 - 通过node命令启动
 - 配置启动入口
@@ -594,7 +624,7 @@ mongo
 
 
 
-#### 3.5 Node开发接口
+### 3.6 Node开发接口
 
 #### (1) 商品信息列表接口
 

@@ -98,8 +98,8 @@ import Axios from 'axios'
 export default {
   data() {
     return {
-      userName: '',
-      userPwd: '',
+      userName: 'admin',
+      userPwd: '123456',
       errorTip: false,
       loginModalFlag: false,
       errorTip: '',
@@ -107,6 +107,21 @@ export default {
     }
   },
   methods: {
+    checkLogin() {
+      Axios.get('/api/users/checkLogin').then(response => {
+        let res = response.data
+        let path = this.$route.pathname
+        if(res.status === '0') {
+          this.nickName = res.result
+          this.loginModalFlag = false
+        } else {
+          // if(this.$route.path !== '/goods') {
+          //   this.$router.push('/goods')
+          // }
+          return
+        }
+      })
+    },
     login() {
       if(!this.userName || !this.userPwd) {
         this.errorTip = true
@@ -136,6 +151,9 @@ export default {
         }
       })
     }
+  },
+  mounted() {
+    // this.checkLogin()
   }
 }
 </script>
