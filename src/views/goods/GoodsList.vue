@@ -232,6 +232,8 @@ export default {
         if(res.data.status === '0') {
           // alert('加入成功')
           this.mdShowCart = true
+
+          this.$store.commit('updataCartCount', 1)
         } else {
           // alert('失败')
           this.mdShow = true

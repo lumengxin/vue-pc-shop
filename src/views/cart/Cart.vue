@@ -255,11 +255,14 @@ export default {
         checked: item.checked
       }).then(response => {
         let res = response.data
-        if(res.status === '0') {
-          // alert('修改数量成功')
-        } else {
-          // alert('修改数量失败')
+
+        let num = 0
+        if(flag === 'add') {
+          num = 1
+        } else if(flag === 'sub') {
+          num = -1
         }
+        this.$store.commit('updataCartCount', num)
       })
     },
     closeModal() {
@@ -278,6 +281,9 @@ export default {
           console.log('删除成功')
           this.modalConfirm = false
           this.init()
+
+          let delProduceNum = this.delItem.productNum
+          this.$store.commit('updataCartCount', -delProduceNum)
         } else {
           console.log('删除失败')
         }

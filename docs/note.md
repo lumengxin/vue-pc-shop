@@ -313,6 +313,8 @@ axios.all([getUserAccount(), getUserPermissions()])
 
 ### 1.8 Vuex
 
+![vuex](.\vuex.png)
+
 **vuex是什么？**
 
 ​	Vuex是一个专门为Vue.js应用程序开发的状态管理模式。
@@ -421,8 +423,6 @@ const moduleB = {
 	mutations: {}
 }
 ```
-
-
 
 
 
@@ -789,3 +789,8 @@ mongoose.connect('mongodb://127.0.0.1:27017/vue_pc_shop');
 **测试接口完成**
 
 > http://localhost:3000/goods/list?page=1[,&pageSize=10[,$sort=-1]]
+
+
+
+## 4.webpack工具
+

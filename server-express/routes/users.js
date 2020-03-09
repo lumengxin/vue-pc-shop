@@ -383,4 +383,31 @@ router.get("/orderDetail", function (req,res,next) {
   })
 });
 
+/* 查询购物车中商品数量 */
+router.get("/getCartCount", function(req, res, next) {
+  if(req.cookies && req.cookies.userId) {
+    var userId = req.cookies.userId
+    User.findOne({userId: userId}, function(err, doc) {
+      if(err) {
+        res.json({
+          status: '1',
+          msg: err.message,
+          result: ''
+        })
+      } else {
+        var cartList = doc.cartList
+        let cartCount = 0
+        cartList.map(function(item) {
+          cartCount += parseInt(item.productNum)
+        })
+        res.json({
+          status: '0',
+          msg: '',
+          result: cartCount
+        })
+      }
+    })
+  }
+})
+
 module.exports = router;

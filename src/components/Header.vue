@@ -32,7 +32,7 @@
           <a href="javascript:void(0)" class="navbar-link" @click="loginModalFlag=true" v-if="!nickName">Login</a>
           <a href="javascript:void(0)" class="navbar-link" v-if="nickName" @click="logout">Logout</a>
           <div class="navbar-cart-container">
-            <span class="navbar-cart-count"></span>
+            <span class="navbar-cart-count" v-if="cartCount > 0">{{cartCount}}</span>
             <a class="navbar-link navbar-cart-link" href="/#/cart">
               <svg class="navbar-cart-logo">
                 <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-cart" />
@@ -94,6 +94,7 @@
 <script>
 import '../assets/css/login.css'
 import Axios from 'axios'
+import { mapState, mapMutations } from 'vuex'
 
 export default {
   name: 'NavHeader',
@@ -103,17 +104,38 @@ export default {
       userPwd: '123456',
       errorTip: false,
       loginModalFlag: false,
-      errorTip: '',
-      nickName: ''
+      errorTip: ''
+      // nickName: ''
     }
   },
+  computed: {
+    // nickName() {
+    //   return this.$store.state.nickName
+    // },
+    // cartCount() {
+    //   return this.$store.state.cartCount
+    // }
+    // [...new Set(a)]  数组a去重
+    ...mapState([
+      'nickName',
+      'cartCount'
+    ])
+  },
   methods: {
+    ...mapMutations([
+      'updataUserInfo'
+    ]),
     checkLogin() {
       Axios.get('/api/users/checkLogin').then(response => {
         let res = response.data
         let path = this.$route.pathname
         if(res.status === '0') {
-          this.nickName = res.result
+          // this.nickName = res.result
+
+          // this.$store.commit('updataUserInfo', res.result)
+          this.updataUserInfo(res.result)
+          this.getCartCount()
+
           this.loginModalFlag = false
         } else {
           if(this.$route.path !== '/') {
@@ -136,8 +158,11 @@ export default {
         if (res.status === '0') {
           this.errorTip = false
           this.loginModalFlag = false
-          this.nickName = res.result.userName
-          console.log("login -> this.nickName", this.nickName)
+          // this.nickName = res.result.userName
+
+          // this.$store.commit('updataUserInfo', res.result.userName)
+          this.updataUserInfo(res.result.userName)
+          this.getCartCount()
         } else {
           this.errorTip = true
         }
@@ -148,10 +173,19 @@ export default {
         let res = response.data
         if (res.status === '0') {
           console.log('logout')
-          this.nickName = ''
-          this.$router.push('/')
+          // this.$router.push('/')
+          this.$router.go(0)
+
+          // this.nickName = ''
+          // this.$store.commit('updataUserInfo', '')
+          this.updataUserInfo('')
         }
       })
+    },
+    async getCartCount() {
+      const {data: res} = await Axios.get('api/users/getCartCount')
+
+      this.$store.commit('initCartCount', res.result)
     }
   },
   mounted() {
