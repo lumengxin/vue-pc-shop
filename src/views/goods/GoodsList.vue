@@ -108,20 +108,10 @@
 <script>
 import '@/assets/css/base.css'
 import '@/assets/css/checkout.css'
-import NavHeader from '@/components/Header.vue'
-import NavBread from '@/components/Bread.vue'
-import NavFooter from '@/components/Footer.vue'
-import Modal from '@/components/Modal.vue'
 import axios from 'axios'
 
 export default {
   name: 'GoodsList',
-  components: {
-    NavHeader,
-    NavBread,
-    NavFooter,
-    Modal
-  },
   data() {
     return {
       goodsList: [],

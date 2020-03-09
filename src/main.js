@@ -6,6 +6,8 @@ import store from './store'
 import VueLazyLoad from 'vue-lazyload'
 // 滚动请求加载
 import infiniteScroll from 'vue-infinite-scroll'
+// 全局注册公共组件
+import './components/register.js'
 
 Vue.use(VueLazyLoad, {
   loading: require("../public/img/loading-svg/loading-bars.svg")

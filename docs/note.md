@@ -311,6 +311,119 @@ axios.all([getUserAccount(), getUserPermissions()])
 	}))
 ```
 
+### 1.8 Vuex
+
+**vuex是什么？**
+
+​	Vuex是一个专门为Vue.js应用程序开发的状态管理模式。
+
+**为什么需要用vuex?**
+
+​	当我们构建一个中大型的单页面应用程序时，vuex可以更好的帮助我们在组件外部统一管理状态。
+
+**vuex的核心概念**
+
+- State
+  - 唯一的数据源
+  - 单一状态树
+
+```
+const Counter = {
+	template: `<div>{{count}}</div>`,
+	computed: {
+		// computed里面必须是函数
+		count() {
+			return this.$store.state.count
+		}
+	}
+}
+```
+
+- Getters
+  - 通过getters可以派生出一些新的状态
+
+```
+const store = new Vuex.Store({
+	state: {
+		todos: [
+			{id: 1, text: 'a', done: true},
+			{id: 2, text: 'b', done: false},
+			{id: 3, text: 'c', done: true},
+		]
+	},
+	getters: {
+		doneTodos: state => {
+			return state.todos.filter(todo => todo.done)
+		}
+	}
+})
+```
+
+- Mutations
+  - 更改vuex的store中的状态的唯一方法是提交mutation
+
+```
+const store = new Vuex.Store({
+	state: {
+		count: 1
+	},
+	mutations: {
+		increment(state) {
+			// 变更状态
+			state.count++
+		}
+	}
+})
+// 提交
+store.commit('increment')
+```
+
+- Actions
+  - actions提交的是mutation, 而不是直接变更状态
+  - action可以包含任意异步操作
+
+```
+const store = new Vuex.Store({
+	state: {
+		count: 1
+	},
+	mutations: {
+		increment(state) {
+			state.count++
+		}
+	},
+	actions: {
+		increment(context) {
+			context.commit('increment')
+		}
+	}
+})
+```
+
+- Modules
+  - 面对复杂的应用程序，当管理的状态比较多时，我们需要将vuex的store对象分割成模块(modulus)
+
+```
+const store = new Vuex.Store({
+	modules: {
+		a: moduleA,
+		b: moduleB
+	}
+})
+const moduleA = {
+	state: {},
+	getters: {},
+	mutations: {},
+	actions: {}
+}
+const moduleB = {
+	state: {},
+	mutations: {}
+}
+```
+
+
+
 
 
 ##  2.ECMAScript6

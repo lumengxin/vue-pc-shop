@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <script src="../../node_modules/vue/dist/vue.js"></script>
+  <script src="../../node_modules/vuex/dist/vuex.js"></script>
+</head>
+<body>
+  <div id="app">
+    <h2>{{msg}}</h2>
+    <counter>
+      组件内部内容；
+      模板中的内容
+    </counter>
+    <a href="javascript:;" @click="add">提交</a>
+  </div>
+
+  <script>
+    const counter = {
+      template: `
+        <div>
+          <p>点击次数：{{count}}</p>
+          <p>姓名：{{fullName}}</p>
+        </div>
+      `,
+      computed: {
+        count() {
+          return this.$store.state.count
+        },
+        username() {
+          return this.$store.state.name
+        },
+        fullName() {
+          return this.$store.getters.fullName
+        }
+      }
+    }
+
+    const storeVuex = new Vuex.Store({
+      state: {
+        count: 0,
+        name: ''
+      },
+      getters: {
+        fullName(state) {
+          return state.name + ' ' + 'san'
+        }
+      },
+      mutations: {
+        increase(state, num) {
+          state.count += num
+        },
+        changeName(state, username) {
+          state.name = username
+        }
+      },
+      actions: {
+        incMore(context, num) {
+          context.commit("increase", num)
+        }
+      }
+    })
+
+    var app = new Vue({
+      name: 'App',
+      el: '#app',
+      store: storeVuex,
+      data: {
+        msg: 'vuex的使用'
+      },
+      components: {
+        counter
+      },
+      methods: {
+        add() {
+          // this.$store.commit('increase', 1)
+          this.$store.commit('changeName', 'zhang')
+          this.$store.dispatch('incMore', 10)
+        }
+      }
+    })
+  </script>
+</body>
+</html>

@@ -90,8 +90,7 @@
               <li v-for="(item, index) in cartList" :key="index">
                 <div class="cart-tab-1">
                   <div class="cart-item-check">
-                    <a
-                      href="javascipt:;"
+                    <a href="javascript:;"
                       class="checkbox-btn item-check-btn"
                       v-bind:class="{'check':item.checked=='1'}"
                       @click="editCart('checked',item)"
@@ -145,23 +144,25 @@
           <div class="cart-foot-inner">
             <div class="cart-foot-l">
               <div class="item-all-check">
-                <a href="javascipt:;">
-                  <span class="checkbox-btn item-check-btn">
+                <a href="javascript:;" @click="toggleCheckAll">
+                  <span class="checkbox-btn item-check-btn" :class="{'check': checkAllFlag}">
                     <svg class="icon icon-ok">
                       <use xlink:href="#icon-ok" />
                     </svg>
                   </span>
-                  <span>Select all</span>
+                  <span >Select all</span>
                 </a>
               </div>
             </div>
             <div class="cart-foot-r">
               <div class="item-total">
                 Item total:
-                <span class="total-price">500</span>
+                <span class="total-price">{{totalPrice | currency('￥')}}</span>
               </div>
               <div class="btn-wrap">
-                <a class="btn btn--red">Checkout</a>
+                <a class="btn btn--red" @click="checkOut" :class="{'btn--dis': checkedCount===0}">
+                  Checkout
+                </a>
               </div>
             </div>
           </div>
@@ -186,25 +187,47 @@
 </template>
 
 <script>
-import NavHeader from '@/components/Header'
-import NavBread from '@/components/Bread'
-import NavFooter from '@/components/Footer'
-import Modal from '@/components/Modal'
 import axios from 'axios'
+import { currency } from '@/util/currency'
 
 export default {
   name: 'MyCart',
-  components: {
-    NavHeader,
-    NavBread,
-    NavFooter,
-    Modal
-  },
   data() {
     return {
       cartList: [],
       delItem: {},
       modalConfirm: false
+    }
+  },
+  filters: {
+    currency: currency
+  },
+  computed: {
+    checkedCount() {
+      let i = 0
+      if (this.cartList.length > 0) {
+        this.cartList.forEach(item => {
+          if (item.checked === '1') {
+            i++
+          }
+        })
+      }
+      return i
+    },
+    checkAllFlag() {
+      return this.checkedCount === this.cartList.length
+    },
+    totalPrice() {
+      var money = 0
+      if (this.cartList.length > 0) {
+        this.cartList.forEach(item => {
+          if (item.checked === '1') {
+            money += parseFloat(item.salePrice) * parseInt(item.productNum)
+          }
+        })
+      }
+
+      return money
     }
   },
   methods: {
@@ -259,6 +282,28 @@ export default {
           console.log('删除失败')
         }
       })
+    },
+    toggleCheckAll() {
+      var flag = !this.checkAllFlag
+      this.cartList.forEach((item) => {
+        item.checked = flag ? '1' : '0'
+      })
+
+      axios.post("/api/users/editCheckAll", {
+        checkAll: flag
+      }).then(respon => {
+        let res = respon.data
+        if(res.status === '0') {
+          console.log('updata success')
+        }
+      })
+    },
+    checkOut() {
+      if(this.checkedCount > 0) {
+        this.$router.push({
+          path: '/address'
+        })
+      }
     }
   },
   mounted() {

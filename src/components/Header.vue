@@ -96,6 +96,7 @@ import '../assets/css/login.css'
 import Axios from 'axios'
 
 export default {
+  name: 'NavHeader',
   data() {
     return {
       userName: 'admin',
@@ -115,9 +116,9 @@ export default {
           this.nickName = res.result
           this.loginModalFlag = false
         } else {
-          // if(this.$route.path !== '/goods') {
-          //   this.$router.push('/goods')
-          // }
+          if(this.$route.path !== '/') {
+            this.$router.push('/')
+          }
           return
         }
       })
@@ -148,12 +149,13 @@ export default {
         if (res.status === '0') {
           console.log('logout')
           this.nickName = ''
+          this.$router.push('/')
         }
       })
     }
   },
   mounted() {
-    // this.checkLogin()
+    this.checkLogin()
   }
 }
 </script>
