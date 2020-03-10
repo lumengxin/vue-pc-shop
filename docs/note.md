@@ -1,4 +1,4 @@
-# 项目前知识积累
+# 项目知识积累
 
 ## 1. vue相关
 
@@ -794,3 +794,72 @@ mongoose.connect('mongodb://127.0.0.1:27017/vue_pc_shop');
 
 ## 4.webpack工具
 
+![webpack](.\webpack.png)
+
+### 4.1基础介绍
+
+#### (1)常用插件
+
+- html-webpack-plugin
+- extract-text-webpack-plugin
+- UglifyJsPlugin/new webpack.optimize.UglifyJsPlugin()
+- CommonsChunkPlugin/new webpack.optimizeCommonsChunkPlugin()
+- clean-webpack-plugin
+- copy-webpack-plugin
+
+#### (2)loader
+
+- 解析js文件，并输出
+- 解析css文件   css-loader
+- 解析sass, less, scss, stylus文件  sass-loader/less-loader/node-sass
+- 解析图片 png, jpg, svg, gif   file-loader/url-loader
+- 给css添加前缀   postcss-loader, autoprefixer
+
+### 4.2webpack开发vue-toast插件
+
+
+
+## 5.线上部署
+
+### 5.1前后端分离
+
+后端项目server-express项目中新建package.json, 或者将前端中package.json复制过来删除不需要的依赖，执行npm i。
+
+### 5.2代码上传服务器
+
+#### (1)后端
+
+ftp工具或者ssh或者scp
+
+**scp:**
+
+```
+scp ....[本地代码路径] root@123.57.2.142: /...[远程路径];
+xxx(密码);
+```
+
+**ftp工具上传失败：**
+
+> ls -la 查看，普通用户无权限
+>
+> sudo chmod 777 demo;   // demo文件夹赋权限
+
+**启动服务：**
+
+```
+cd demo;npm i;npm run start;
+```
+
+*服务器4000端口被占用*
+
+> lsof -i:4000;  // 查看端口
+>
+> kill -9 31889(pid);   // 杀掉进程（熟悉不重要的）
+>
+> npm run start / nodemon bin\www / pm2 start bin\www;
+>
+> ctrl + c ; // 结束进程	ctrl + z ;  // stopped, 后台依然运行
+
+**测试：**
+
+www.xxx.com:4000  或者  123.xx.xx.xx:4000

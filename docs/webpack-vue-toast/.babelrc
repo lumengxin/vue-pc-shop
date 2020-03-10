@@ -1,0 +1,4 @@
+{
+  // webpack > 4.2x时，安装babel: npm i babel-loader @babel/core @babel/preset-env -D
+  "presets": ["@babel/preset-env"]
+}

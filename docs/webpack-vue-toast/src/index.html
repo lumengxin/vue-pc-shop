@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>toast-vue-plugin</title>
+  <script src="./lib/vue.min.js"></script>
+  <script src="../dist/webpack-vue-toast.js"></script>
+</head>
+<body>
+  <div id="app">
+    <a href="javascript:;" @click="toastShow">点击toast</a>
+  </div>
+
+  <script>
+    var app = new Vue({
+      el: '#app',
+      methods: {
+        toastShow() {
+          this.$toast.show('hello, vue-toast')
+        }
+      }
+    })
+  </script>
+</body>
+</html>
